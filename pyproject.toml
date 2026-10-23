@@ -1,0 +1,12 @@
+[project]
+name = "amazonzyme-poc"
+version = "0.1.0"
+description = "Standalone in-silico enzyme bioprospecting & 3D structural swarm showcase powered by PostgreSQL + pg_bio for AmazonZyme (UFAM)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flask>=3.0.0",
+    "numpy>=1.26.0",
+    "psycopg[binary]>=3.1.0",
+    "scipy>=1.11.0",
+]
