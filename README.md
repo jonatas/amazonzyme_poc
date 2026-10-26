@@ -1,6 +1,11 @@
 # AmazonZyme × `pg_bio` — Local Proof of Concept, Proteomics Validation & Globular Discovery Swarm
 
-This POC demonstrates how [`pg_bio`](file:///Users/jonatas/code/pg_bio/src/lib.rs) accelerates **AmazonZyme** (`https://amazonzyme.com.br/`, Manaus, AM — **Dra. Pamella Suely Santa Rosa Pimentel**, **Prof. Dr. Edson Junior do Carmo**, **Samanta Gabriela Souza da Silva**, and **Prof. Dr. Spartaco Astolfi-Filho**) across their core fungal and metagenomic research lines:
+📖 **Read the Full Technical Deep Dive & Interactive 3Dmol.js Blog Post:**  
+👉 **[Bioprospecting the Amazonian Dark Proteome in SQL: 0.39 Å 3D Enzyme Discovery for AmazonZyme's Fungal Cocktails & Terra Preta Metagenomics](https://ideia.me/amazonzyme-fungal-cocktails-terra-preta-pg-bio)**
+
+![AmazonZyme × pg_bio Globular Discovery Swarm Heatmap](assets/amazonzyme_swarm_heatmap.png)
+
+This POC demonstrates how [`pg_bio`](https://github.com/jonatas/pg_bio) accelerates **AmazonZyme** (`https://amazonzyme.com.br/`, Manaus, AM — **Dra. Pamella Suely Santa Rosa Pimentel**, **Prof. Dr. Edson Junior do Carmo**, **Samanta Gabriela Souza da Silva**, and **Prof. Dr. Spartaco Astolfi-Filho**) across their core fungal and metagenomic research lines:
 
 1. **Lignocellulosic Fungal Cocktails (`UFAM1` & `UFAM2`)**: *Penicillium citrinum* `LMI01` (`B1B533`, ~35 kDa SDS-PAGE band), *Aspergillus* sp. `LMI03`, and *Trichoderma reesei* (`P07987`, `P07981`).
 2. **Starch Ethanol SSF & Liquefaction**: *Aspergillus awamori* Glucoamylase GA1/GA2 (`P69327`, 65.79 kDa / 54.50 kDa), *Aspergillus niger* Acid $\alpha$-amylase (`P56271`, pI `4.35`), and *Bacillus licheniformis* Thermostable $\alpha$-amylase (`P06278`).
@@ -44,7 +49,7 @@ uv run python amazonzyme_swarm_web.py
 | **Clone `FosAmy5` / `Max104` (1,626 bp ORF)** | `A0ABW4BNN5` | **62.45 kDa** | **~61 kDa** | `6.35` | pH 5.5–7.0 | `-0.397` | Inclusion Bodies (37 °C) |
 
 ### B. Tryptic Pseudo-Reversal Target-Decoy MS/MS Validation (`generate_decoy_sequence`)
-[`generate_decoy_sequence(seq, 'reverse')`](file:///Users/jonatas/code/pg_bio/src/lib.rs#L998-L1035) implements **Elias & Gygi (2007) tryptic pseudo-reversal** (keeping C-terminal `K`/`R` fixed so the $y_1$ ion and $b_{n-1}$ prefix sum are conserved):
+[`generate_decoy_sequence(seq, 'reverse')`](https://github.com/jonatas/pg_bio/blob/main/src/lib.rs#L998-L1035) implements **Elias & Gygi (2007) tryptic pseudo-reversal** (keeping C-terminal `K`/`R` fixed so the $y_1$ ion and $b_{n-1}$ prefix sum are conserved):
 
 | Scan Name | Target Peptide | Tryptic Decoy (`K`/`R` Fixed) | Target Hits (`10 ppm`) | Decoy Hits (`10 ppm`) |
 | :--- | :--- | :--- | :---: | :---: |
