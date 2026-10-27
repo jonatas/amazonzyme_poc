@@ -81,3 +81,24 @@ Every candidate discovered in `amazonzyme_swarm_discoveries` passes the **3D Alp
 | **TPI Bioplastics (*C. necator* `P23608`)** | **`Q1LGL7`** | ***Cupriavidus metallidurans*** | `0.5911` | `0.6967` | 62.4 | `6.22` | `-0.068` | **88.3** | `26.55 Å` | **1.035** |
 | **TPI `Ade1` (`A0A8E4UR43`, PDB `8V16`)** | **`A0A5B9EAP1`** | ***Terriglobus albidus* (Acidobacteriota)** | `0.7159` | `0.7305` | 33.9 | `6.97` | `-0.038` | **88.4** | `18.77 Å` | **0.950** |
 | **TPI `Ade1` (`A0A8E4UR43`, PDB `8V16`)** | **`A0A0A0WJP7`** | ***Trichoderma harzianum*** | `0.7021` | `0.7670` | 38.3 | `7.87` | `-0.173` | **90.8** | `26.68 Å` | **1.284** |
+
+---
+
+## 4. UFAM / COARACI 5-LOX Triterpenoids 500 ns MD & MM/GBSA–MM/PBSA Validation (`Zenodo 23565306`)
+
+📖 **Read the Technical Deep Dive & Interactive 3Dmol.js Blog Post:**  
+👉 **[Auditing 500 ns Molecular Dynamics in SQL: Triterpenoids, 5-Lipoxygenase, and Cryptic Allosteric Pockets with pg_bio](https://ideia.me/5lox-triterpenoids-mmpbsa-free-energy-audit-pg-bio)**
+
+Validates and ingests the complete UFAM/COARACI dataset (*"Nine triterpenoids at a modeled 5-lipoxygenase pocket: 500 ns derived data and reproducible figures"*, DOI: `10.5281/zenodo.23565306`, version `r22-1.0.2`) into PostgreSQL 18 (`82,000+` rows across 12 `lox5_*` tables) using [`pg_bio`](https://github.com/jonatas/pg_bio)'s new Section 11 thermodynamic auditing and CSR allosteric hotspot discovery primitives:
+
+```bash
+# Run full Zenodo 23565306 checksum verification, offline reproduction, and pg_bio SQL validation
+.venv/bin/python validate_5lox_triterpenoids_pg_bio.py
+```
+
+### Key `pg_bio` Primitives Added & Validated (`src/lib.rs` Section 11)
+- `audit_mmpbsa_decomposition(...) -> EnergyDecompositionAudit`: Double-entry thermodynamic closure audit verifying `MM_plus_polar` (`0.0000 kcal/mol` internal error) and quantifying the non-decomposed PB cavity/dispersion ledger gap (`+20.72` to `+26.05 kcal/mol`).
+- `solvent_shift_penalty(gb_polar, gb_nonpolar, pb_polar, pb_enpolar, pb_edisper) -> f64`: Quantifies the $+25.66\text{ to }+31.02\text{ kcal/mol}$ nonpolar solvation penalty driving the GB-to-PB ranking shift.
+- `build_energy_hotspot_map(...) -> SparseAttentionMap` & `discover_cryptic_hotspots(...) -> Vec<i32>`: Compiles 676-residue decompositions into CSR graphs (**31.14x faster** than Python/NumPy) and discovers **`Ile126` (`-1.045 kcal/mol` GB)**, **`Val29` (`-0.852` GB / `-0.754` PB, #2 in PB)**, and **`Leu66` (`-0.698` GB)** as a cryptic hydrophobic cradle outside the 9-residue operational pocket.
+- `allosteric_mechanism_index(...) -> f64`: Separates the **Polar/Ionic Salt-Bridge Switch (`AKBA / AF7`, `AMI = +0.3139` PB, `66.01%` H-bond occupancy on `Glu134`/`Lys133`)** from the **Deep Hydrophobic Clamps (`α-Amyrin`, `β-Amyrin`, `Lupeol`, `AMI = -0.35` to `-0.47` PB, `83–89%` deep SASA burial)**.
+
